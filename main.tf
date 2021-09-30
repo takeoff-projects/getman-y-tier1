@@ -11,7 +11,7 @@ terraform {
 
 provider "google" {
   # Replace `PROJECT_ID` with your project
-  project = "roi-takeoff-user69"
+  project = "roi-takeoff-user16"
   credentials = file("gcp_key.json")
   region  = "us-central1"  
   zone    = "us-central1-c"
