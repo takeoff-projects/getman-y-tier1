@@ -1,26 +1,30 @@
 # main.tf
 
 terraform {
-    required_version = ">=0.14"
+  required_version = ">= 0.14"
 
-    required_providers {
+  required_providers {
     # Cloud Run support was added on 3.3.0
     google = ">= 3.3"
   }
-    provider "google" {
-        project = "roi-takeoff-user16"
-        credentials = file("gcp_keys.json")
-        region = "us-central1"
-        zone = "us-central1-c"
-  }
+}
 
-    resources "google_ project_service" "run_api" {
-        service = "run.googleapis.com"
+provider "google" {
+  # Replace `PROJECT_ID` with your project
+  project = "roi-takeoff-user69"
+  credentials = file("gcp_key.json")
+  region  = "us-central1"  
+  zone    = "us-central1-c"
+}
 
-        disable_on_destroy = true
-    }
+resource "google_project_service" "run_api" {
+  service = "run.googleapis.com"
 
-    # Create the Cloud Run service
+  disable_on_destroy = true
+}
+
+
+
 resource "google_cloud_run_service" "run_service" {
   name = "app"
   location = "us-central1"
@@ -28,8 +32,8 @@ resource "google_cloud_run_service" "run_service" {
   template {
     spec {
       containers {
-        image = "gcr.io/google-samples/hello-app:1.0"
-        # due to problem with permissions - I decide to leave hello-app as is
+        image = "gcr.io/roi-takeoff-user16/completely-new:latest"
+        # due to problem with permissions - It might not work
       }
     }
   }
@@ -41,14 +45,4 @@ resource "google_cloud_run_service" "run_service" {
 
   # Waits for the Cloud Run API to be enabled
   depends_on = [google_project_service.run_api]
-}
-
-# Allow unauthenticated users to invoke the service
-resource "google_cloud_run_service_iam_member" "run_all_users" {
-  service  = google_cloud_run_service.run_service.name
-  location = google_cloud_run_service.run_service.location
-  role     = "roles/run.invoker"
-  member   = "allUsers"
-}
-
 }
