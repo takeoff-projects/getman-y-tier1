@@ -1,20 +1,5 @@
 
 
-## Build and deploy
-
-```
-./install.sh
-```
-
-## Undeploy (destroy resourses)
-
-```
-./uninstall.sh
-```
-
-
-
-
 # go-website
  
 Sample code from https://github.com/drehnstrom/go-website
